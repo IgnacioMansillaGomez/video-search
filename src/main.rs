@@ -1,11 +1,12 @@
-use std::string;
-
+use video::search_youtube;
 use wasm_bindgen::{JsCast, UnwrapThrowExt};
 use web_sys::HtmlInputElement;
 use yew::{
-    callback, function_component, html, use_state, Callback, Event, InputEvent, MouseEvent,
-    Properties, UseStateHandle,
+    function_component, html, use_state, Callback, Event, InputEvent, MouseEvent, Properties,
+    UseStateHandle,
 };
+mod video;
+
 fn main() {
     yew::start_app::<App>();
 }
@@ -18,19 +19,23 @@ struct Video {
 
 #[function_component(App)]
 fn app() -> Html {
-    let video: UseStateHandle<Option<Video>> = use_state(|| None);
+    let video: UseStateHandle<Option<Video>> = use_state(|| None); // primera creacion e inisializacion de video
 
     let on_search: Callback<String> = {
-        let video: UseStateHandle<Option<Video>> = video.clone();
+        let video = video.clone(); // Este callback necesita hacer eso uso de video entonces clonamos porque si muere la variable video que esta anterior a la funcion la aplicacion muere
         Callback::from(move |text_to_seach: String| {
-            let video_id: String = search_youtube(text_to_seach);
-            video.set(Some(Video {
-                id: video_id,
-                name: "name".to_string(),
-            }))
+            let video: UseStateHandle<Option<Video>> = video.clone(); //Necesitamos volver a clonar porque sucede lo mismo que en caso anterior
+            wasm_bindgen_futures::spawn_local(async move {
+                let video_id: String = search_youtube(text_to_seach).await;
+                video.set(Some(Video {
+                    id: video_id,
+                    name: "name".to_string(),
+                }))
+            });
         })
     };
 
+    // A better approach is videos.use_ref().map()
     let video_section = match (*video).clone() {
         Some(video) => html! {
             <VideoSection name={video.name} id={video.id}/>
@@ -49,12 +54,6 @@ fn app() -> Html {
 #[derive(Properties, PartialEq)]
 struct VideoControlProps {
     on_search: Callback<String>,
-}
-
-fn search_youtube(text_to_search: String) -> String {
-    web_sys::console::log_1(&text_to_search.into());
-
-    String::from("wv_dJvjuC04")
 }
 
 #[function_component(VideoControl)]
