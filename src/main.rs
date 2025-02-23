@@ -52,10 +52,9 @@ struct VideoControlProps {
 }
 
 fn search_youtube(text_to_search: String) -> String {
-    !todo!("HTTP REQUEST");
     web_sys::console::log_1(&text_to_search.into());
 
-    String::from("algo")
+    String::from("wv_dJvjuC04")
 }
 
 #[function_component(VideoControl)]

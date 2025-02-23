@@ -345,6 +345,9 @@ function __wbg_get_imports() {
         const ret = arg0.lastChild;
         return isLikeNone(ret) ? 0 : addToExternrefTable0(ret);
     };
+    imports.wbg.__wbg_log_c222819a41e063d3 = function(arg0) {
+        console.log(arg0);
+    };
     imports.wbg.__wbg_namespaceURI_63ddded7f2fdbe94 = function(arg0, arg1) {
         const ret = arg1.namespaceURI;
         var ptr1 = isLikeNone(ret) ? 0 : passStringToWasm0(ret, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
@@ -450,7 +453,7 @@ function __wbg_get_imports() {
         wasm.__wbindgen_free(arg0, arg1 * 4, 4);
         console.warn(...v0);
     };
-    imports.wbg.__wbindgen_closure_wrapper1325 = function(arg0, arg1, arg2) {
+    imports.wbg.__wbindgen_closure_wrapper1327 = function(arg0, arg1, arg2) {
         const ret = makeClosure(arg0, arg1, 167, __wbg_adapter_20);
         return ret;
     };
